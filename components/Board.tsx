@@ -1,26 +1,48 @@
-import React, { FunctionComponent } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import React, { FunctionComponent, useState } from "react";
 import { Default_Cols_Count, Default_Rows_Count } from "../constants";
 import Cell from "./Cell";
 
-const Rows = Array(Default_Rows_Count).fill(0);
-const Cols = Array(Default_Cols_Count).fill(0);
+const Cells = Array(Default_Rows_Count * Default_Cols_Count).fill(0);
+
+Cells[0] = 1;
 
 interface Props {}
 
 const Board: FunctionComponent<Props> = ({}) => {
+  const [cells, setCells] = useState(Cells);
+  function onDragStart(event: DragStartEvent) {}
+  function onDragEnd(event: DragEndEvent) {
+    const { over, active } = event;
+
+    if (over) {
+      setCells((cells) => {
+        const newCells = [...cells];
+        newCells[Number(active.id)] = 0;
+        newCells[Number(over.id)] = 1;
+        return newCells;
+      });
+    }
+  }
   return (
-    <DragDropContext onDragEnd={() => {}}>
+    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
       <div className="flex">
         <div
-          className={`bg-red-500 grid grid-row-${Default_Rows_Count} grid-cols-${Default_Cols_Count} grid-flow-row`}
+          //TODO: Change grid-row & grid-cols to use dynamic.
+          className={`bg-red-500 grid grid-cols-10`}
         >
-          {Rows.map((_, row) =>
-            Cols.map((_, col) => <Cell key={col} row={row} col={col} />)
-          )}
+          {cells.map((value, index) => (
+            <Cell
+              value={value}
+              key={index}
+              index={index}
+              row={index % Default_Rows_Count}
+              col={Math.floor(index / Default_Cols_Count)}
+            />
+          ))}
         </div>
       </div>
-    </DragDropContext>
+    </DndContext>
   );
 };
 

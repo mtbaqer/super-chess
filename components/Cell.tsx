@@ -1,37 +1,27 @@
 import React, { FunctionComponent } from "react";
-import { Droppable, DroppableProvided } from "react-beautiful-dnd";
 import Image from "next/image";
 import Bishop from "./pieces/Bishop";
+import Piece from "./Piece";
+import { useDroppable } from "@dnd-kit/core";
 
 interface Props {
+  value: number;
+  index: number;
   row: number;
   col: number;
 }
 
-const Cell: FunctionComponent<Props> = ({ row, col }) => {
+const Cell: FunctionComponent<Props> = ({ index, row, col, value }) => {
+  const id = `${row}-${col}`;
+  const { isOver, setNodeRef } = useDroppable({ id: index });
+  const color = (row + col) % 2 === 0 ? "bg-board-black" : "bg-board-white";
   return (
-    // <Droppable
-    //   key={id}
-    //   droppableId={id}
-    //   type=""
-    //   direction="horizontal"
-    //   ignoreContainerClipping={false}
-    //   isCombineEnabled={false}
-    // >
-    //   {(provided: DroppableProvided) => (
-    // <div ref={provided.innerRef} {...provided.droppableProps} className="">
     <div
-      className={`${
-        (row + col) % 2 === 0 ? "bg-board-black" : "bg-board-white"
-      } 
-      grid place-content-center p-2 max-w-xs max-h-xs`}
+      ref={setNodeRef}
+      className={`${color} grid place-content-center p-2 w-24 h-24 max-w-xs max-h-xs`}
     >
-      <Bishop />
+      {value == 1 && <Piece id={index} index={index} />}
     </div>
-    //   {provided.placeholder}
-    // </div>
-    //   )}
-    // </Droppable>
   );
 };
 
