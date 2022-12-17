@@ -1,11 +1,7 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
-import Button from "../components/Button";
-import useNewRoomActions from "../hooks/useNewRoomActions";
+import Board from "../../components/Board/Board";
 
-export default function Home() {
-  const { navigateToNewRoom } = useNewRoomActions();
-
+export default function Room() {
   return (
     <>
       <Head>
@@ -14,7 +10,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Button onClick={navigateToNewRoom}>Generate New Room</Button>
+      <Board />
     </>
   );
 }
