@@ -1,8 +1,6 @@
 import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
-import { useAtomValue } from "jotai";
 import React, { FunctionComponent, useState } from "react";
 import { Default_Cols_Count, Default_Rows_Count } from "../../constants";
-import { roomAtom } from "../../state/room";
 import Cell from "./Cell";
 
 const Cells = Array(Default_Rows_Count * Default_Cols_Count).fill(0);

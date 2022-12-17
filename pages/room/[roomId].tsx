@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Board from "../../components/Board/Board";
-import useAtomSubscribers from "../../state/useRoom";
+import useAtomSubscribers from "../../state/useAtomSubscribers";
 
 export default function Room() {
   useAtomSubscribers();
