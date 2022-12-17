@@ -14,42 +14,48 @@ export interface Database {
           room_id: number
           row: number
           column: number
-          id: number
+          type: string | null
         }
         Insert: {
           room_id: number
           row: number
           column: number
-          id?: number
+          type?: string | null
         }
         Update: {
           room_id?: number
           row?: number
           column?: number
-          id?: number
+          type?: string | null
         }
       }
       objects: {
         Row: {
           id: number
-          cell_id: number
           breakable: boolean
           modifier: string | null
           type: string
+          room_id: number
+          row: number
+          column: number
         }
         Insert: {
           id?: number
-          cell_id: number
           breakable: boolean
           modifier?: string | null
           type: string
+          room_id: number
+          row: number
+          column: number
         }
         Update: {
           id?: number
-          cell_id?: number
           breakable?: boolean
           modifier?: string | null
           type?: string
+          room_id?: number
+          row?: number
+          column?: number
         }
       }
       players: {
@@ -82,17 +88,20 @@ export interface Database {
         Row: {
           id: number
           created_at: string | null
-          temp: number | null
+          rows: number
+          columns: number
         }
         Insert: {
           id?: number
           created_at?: string | null
-          temp?: number | null
+          rows: number
+          columns: number
         }
         Update: {
           id?: number
           created_at?: string | null
-          temp?: number | null
+          rows?: number
+          columns?: number
         }
       }
     }

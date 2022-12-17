@@ -1,8 +1,10 @@
-import { Optional } from "../utils";
 import { Database } from "./supabase";
 
-const PieceTypes = ["king", "knight", "bishop", "rook", "beyonce"] as const;
-type PieceType = typeof PieceTypes[number];
+export const PieceTypes = ["king", "knight", "bishop", "rook", "beyonce"] as const;
+export type PieceType = typeof PieceTypes[number];
+export type Piece = GameObject & {
+  type: PieceType;
+};
 
 export const ModifierTypes = ["coolDown", "warmUp", ...PieceTypes.map((type) => `${type}_modifier` as const)] as const;
 type ModifierType = typeof ModifierTypes[number];

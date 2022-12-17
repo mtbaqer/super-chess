@@ -16,14 +16,14 @@ export default function useNewBoardActions() {
 
   async function generateNewBoard() {
     const cells = generateCells();
-    const { data: insertedCells } = await supabase.from("cells").insert(cells).select();
+    const { data: insertedCells } = await supabase.from("cells").upsert(cells).select();
     if (!insertedCells) return;
 
-    const objects = generateObjects(insertedCells);
-    const { data: insertedObjects } = await supabase.from("objects").insert(objects).select();
+    const objects = generateObjects();
+    const { data: insertedObjects } = await supabase.from("objects").upsert(objects).select();
     if (!insertedObjects) return;
 
-    const pieces = generatePieces(insertedCells);
+    const pieces = generatePieces();
     const { data: insertedPieces } = await supabase.from("objects").insert(pieces).select();
     if (!insertedPieces) return;
 
@@ -35,45 +35,53 @@ export default function useNewBoardActions() {
     const cells: InsertCell[] = [];
     for (let column = 0; column < Default_Cols_Count; column++) {
       for (let row = 0; row < Default_Rows_Count; row++) {
-        cells.push({ room_id: room.id, row, column });
+        // cells.push({ room_id: room.id, row, column });
       }
     }
     return cells;
   }
 
-  function generateObjects(cells: Cell[]) {
+  function generateObjects() {
     //Don't judge me it's a hackathon
     const objects: InsertGameObject[] = [];
-    for (const cell of cells) {
-      const randomNumber = Math.random();
-      if (randomNumber <= VerySmallChance) {
-        const secondRandomNumber = Math.random();
-        if (secondRandomNumber <= 0.5) {
-          objects.push({
-            cell_id: cell.id,
-            breakable: false,
-            type: "unbreakable",
-          });
-        } else {
-          const modifier = randomModifier();
-          objects.push({
-            cell_id: cell.id,
+    for (let row = 0; row < room.rows; row++) {
+      for (let column = 0; column < room.columns; column++) {
+        const randomNumber = Math.random();
+        if (randomNumber <= VerySmallChance) {
+          const secondRandomNumber = Math.random();
+          if (secondRandomNumber <= 0.5) {
+            objects.push({
+              room_id: room.id,
+              row,
+              column,
+              breakable: false,
+              type: "unbreakable",
+            });
+          } else {
+            const modifier = randomModifier();
+            objects.push({
+              room_id: room.id,
+              row,
+              column,
+              breakable: true,
+              modifier,
+              type: modifier,
+            });
+          }
+        } else if (randomNumber <= BreakableBlockChance) {
+          const block: InsertGameObject = {
+            room_id: room.id,
+            row,
+            column,
             breakable: true,
-            modifier,
-            type: modifier,
-          });
-        }
-      } else if (randomNumber <= BreakableBlockChance) {
-        const block: InsertGameObject = {
-          cell_id: cell.id,
-          breakable: true,
-          type: "breakable",
-        };
-        const secondRandomNumber = Math.random();
-        if (secondRandomNumber <= ModifierInBlockChance) {
-          const modifier = randomModifier();
-          block.modifier = modifier;
-          block.type = modifier;
+            type: "breakable",
+          };
+          const secondRandomNumber = Math.random();
+          if (secondRandomNumber <= ModifierInBlockChance) {
+            const modifier = randomModifier();
+            block.modifier = modifier;
+            block.type = modifier;
+          }
         }
       }
     }
@@ -84,19 +92,22 @@ export default function useNewBoardActions() {
     return ModifierTypes[Math.floor(Math.random() * ModifierTypes.length)];
   }
 
-  function generatePieces(cells: Cell[]) {
+  function generatePieces() {
     const pieces: InsertGameObject[] = [];
 
-    const cornerIndexes = [
-      0,
-      Default_Rows_Count - 1,
-      Default_Rows_Count * (Default_Cols_Count - 1),
-      Default_Rows_Count * Default_Cols_Count - 1,
+    const cornerPositions = [
+      [0, 0],
+      [0, room.columns - 1],
+      [room.rows - 1, 0],
+      [room.rows - 1, room.columns - 1],
     ];
 
     for (let i = 0; i < players.length; i++) {
+      const [row, column] = cornerPositions[i];
       pieces.push({
-        cell_id: cells[cornerIndexes[i]].id,
+        room_id: room.id,
+        row,
+        column,
         breakable: true,
         type: "king",
         modifier: "king_modifier",
