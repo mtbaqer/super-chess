@@ -58,18 +58,24 @@ export interface Database {
           created_at: string | null
           room_id: number | null
           modifiers: string[]
+          piece_id: number | null
+          color: string
         }
         Insert: {
           id?: number
           created_at?: string | null
           room_id?: number | null
           modifiers: string[]
+          piece_id?: number | null
+          color: string
         }
         Update: {
           id?: number
           created_at?: string | null
           room_id?: number | null
           modifiers?: string[]
+          piece_id?: number | null
+          color?: string
         }
       }
       rooms: {

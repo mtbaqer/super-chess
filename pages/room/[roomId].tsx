@@ -1,9 +1,13 @@
 import Head from "next/head";
 import Board from "../../components/Board/Board";
+import Button from "../../components/Button";
+import useNewBoardActions from "../../hooks/useNewBoardActions";
 import useAtomSubscribers from "../../state/useAtomSubscribers";
 
 export default function Room() {
   useAtomSubscribers();
+
+  const { generateNewBoard } = useNewBoardActions();
 
   return (
     <>
@@ -14,6 +18,7 @@ export default function Room() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Board />
+      <Button onClick={generateNewBoard}>Generate New Board</Button>
     </>
   );
 }
