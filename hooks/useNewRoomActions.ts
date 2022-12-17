@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
 import supabase from "../supabase";
 
 export default function useNewRoomActions() {
