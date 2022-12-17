@@ -1,7 +1,10 @@
 import Head from "next/head";
 import Board from "../../components/Board/Board";
+import useAtomSubscribers from "../../state/useRoom";
 
 export default function Room() {
+  useAtomSubscribers();
+
   return (
     <>
       <Head>
