@@ -32,21 +32,21 @@ export interface Database {
       objects: {
         Row: {
           id: number
-          cell_id: number | null
+          cell_id: number
           breakable: boolean
           modifier: string | null
           type: string
         }
         Insert: {
           id?: number
-          cell_id?: number | null
+          cell_id: number
           breakable: boolean
           modifier?: string | null
           type: string
         }
         Update: {
           id?: number
-          cell_id?: number | null
+          cell_id?: number
           breakable?: boolean
           modifier?: string | null
           type?: string
