@@ -32,23 +32,23 @@ function getBeyonceLegalMoves(position: Position, objects: GameObject[][], width
 
 function getRookLegalMoves(position: Position, objects: GameObject[][], width: number, height: number): Position[] {
   const legalMoves: Position[] = [];
-  const allowedX = [
+  const allowedColumnDirections = [
     [1, 0],
     [-1, 0],
   ];
-  const allowedY = [
+  const allowedRowDirections = [
     [0, 1],
     [0, -1],
   ];
-  for (let [x, y] of allowedX) {
+  for (let [x, y] of allowedColumnDirections) {
     for (let i = 1; i < width; i++) {
-      const newX = position.column + x * i;
-      if (0 <= newX && newX < width) {
-        if (!objects[newX][position.row]) {
-          legalMoves.push({ column: newX, row: position.row });
+      const newColumn = position.column + x * i;
+      if (0 <= newColumn && newColumn < width) {
+        if (!objects[position.row][newColumn]) {
+          legalMoves.push({ column: newColumn, row: position.row });
         } else {
-          if (objects[newX][position.row].breakable) {
-            legalMoves.push({ column: newX, row: position.row });
+          if (objects[position.row][newColumn].breakable) {
+            legalMoves.push({ column: newColumn, row: position.row });
           }
           break;
         }
@@ -57,15 +57,15 @@ function getRookLegalMoves(position: Position, objects: GameObject[][], width: n
       }
     }
   }
-  for (let [x, y] of allowedY) {
+  for (let [x, y] of allowedRowDirections) {
     for (let j = 1; j < height; j++) {
-      const newY = position.row + y * j;
-      if (0 <= newY && newY < height) {
-        if (!objects[position.column][newY]) {
-          legalMoves.push({ column: position.column, row: newY });
+      const newRow = position.row + y * j;
+      if (0 <= newRow && newRow < height) {
+        if (!objects[newRow][position.column]) {
+          legalMoves.push({ column: position.column, row: newRow });
         } else {
-          if (objects[position.column][newY].breakable) {
-            legalMoves.push({ column: position.column, row: newY });
+          if (objects[newRow][position.column].breakable) {
+            legalMoves.push({ column: position.column, row: newRow });
           }
           break;
         }
@@ -87,14 +87,15 @@ function getBishopLegalMoves(position: Position, objects: GameObject[][], width:
   ];
   for (let [x, y] of allowedDirections) {
     for (let i = 1; i < Math.min(width, height); i++) {
-      const newX = position.column + x * i;
-      const newY = position.row + y * i;
-      if (0 <= newX && newX < width && 0 <= newY && newY < height) {
-        if (!objects[newX][position.row]) {
-          legalMoves.push({ column: newX, row: position.row });
+      const newColumn = position.column + x * i;
+      const newRow = position.row + y * i;
+
+      if (0 <= newColumn && newColumn < width && 0 <= newRow && newRow < height) {
+        if (!objects[newRow][newColumn]) {
+          legalMoves.push({ column: newColumn, row: newRow });
         } else {
-          if (objects[newX][position.row].breakable) {
-            legalMoves.push({ column: newX, row: position.row });
+          if (objects[newRow][newColumn].breakable) {
+            legalMoves.push({ column: newColumn, row: newRow });
           }
           break;
         }
@@ -143,11 +144,11 @@ function getValidMoves(
 ) {
   const legalMoves: Position[] = [];
   for (let [x, y] of pieceMoves) {
-    const newX = position.column + x;
-    const newY = position.row + y;
-    if (0 <= newX && newX < width && 0 <= newY && newY < height) {
-      if (!objects[newX][newY] || objects[newX][newY].breakable) {
-        legalMoves.push({ column: newX, row: newY });
+    const newColumn = position.column + x;
+    const newRow = position.row + y;
+    if (0 <= newColumn && newColumn < width && 0 <= newRow && newRow < height) {
+      if (!objects[newRow][newColumn] || objects[newRow][newColumn].breakable) {
+        legalMoves.push({ column: newColumn, row: newRow });
       }
     }
   }
