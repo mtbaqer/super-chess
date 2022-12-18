@@ -21,7 +21,7 @@ const Cell: FunctionComponent<Props> = ({ cell, highlight }) => {
   const objects = useAtomValue(gameObjectsAtom);
   const currentObject = objects[cell.row][cell.column];
 
-  const { setNodeRef } = useDroppable({ id: `${row}-${column}` });
+  const { setNodeRef } = useDroppable({ id: `${row}-${column}`, data: cell });
 
   return (
     <div ref={setNodeRef} className={`${color} grid place-content-center p-2 w-24 h-24 max-w-xs max-h-xs`}>

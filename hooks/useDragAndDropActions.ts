@@ -5,7 +5,8 @@ import { getLegalMoves } from "../logic/chessRules";
 import { toKey } from "../logic/utils";
 import { gameObjectsAtom } from "../state/gameObjects";
 import { roomAtom } from "../state/room";
-import { Piece } from "../types/types";
+import supabase from "../supabase";
+import { Cell, Piece } from "../types/types";
 
 export default function useDragAndDropActions() {
   const room = useAtomValue(roomAtom)!;
@@ -23,7 +24,15 @@ export default function useDragAndDropActions() {
     setLegalMoves(set);
   }
 
-  function onDragEnd(event: DragEndEvent) {
+  async function onDragEnd(event: DragEndEvent) {
+    const cell = event.over?.data.current as any as Cell;
+    if (cell && isLegalMove(cell.row, cell.column)) {
+      const piece = event.active.data.current as any as Piece;
+
+      const newPiece: Piece = { ...piece, row: cell.row, column: cell.column };
+
+      await supabase.from("objects").update(newPiece).eq("id", newPiece.id);
+    }
     setLegalMoves(new Set());
   }
 
