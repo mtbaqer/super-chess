@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Piece: FunctionComponent<Props> = ({ piece }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: piece.id });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: piece.id, data: piece });
   const style = transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined;
   return (
     <div ref={setNodeRef} style={style} {...listeners} {...attributes} className="">

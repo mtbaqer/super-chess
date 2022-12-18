@@ -23,3 +23,8 @@ export type InsertGameObject = Database["public"]["Tables"]["objects"]["Insert"]
   type: GameObjectType;
   modifier?: ModifierType;
 };
+
+export interface Position {
+  row: number;
+  column: number;
+}

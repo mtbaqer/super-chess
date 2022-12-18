@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import supabase from "../supabase";
 import { GameObject, Player, Room } from "../types/types";
-import { isDefined } from "../utils";
+import { isDefined } from "../logic/utils";
 import { decoratedCellsAtom } from "./cells";
 import { primitiveGameObjectsAtom } from "./gameObjects";
 import { playersAtom } from "./players";
