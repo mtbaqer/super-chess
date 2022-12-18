@@ -1,6 +1,7 @@
 import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useAtomValue } from "jotai";
 import React, { FunctionComponent, useState } from "react";
+import useDragAndDropActions from "../../hooks/useDragAndDropActions";
 import { getLegalMoves } from "../../logic/chessRules";
 import { toKey } from "../../logic/utils";
 import { cellsAtom } from "../../state/cells";
@@ -12,24 +13,9 @@ import Cell from "./Cell";
 interface Props {}
 
 const Board: FunctionComponent<Props> = ({}) => {
-  const room = useAtomValue(roomAtom)!;
   const cells = useAtomValue(cellsAtom);
-  const objects = useAtomValue(gameObjectsAtom);
 
-  const [legalMoves, setLegalMoves] = useState<Set<string>>(new Set());
-
-  function onDragStart(event: DragStartEvent) {
-    const piece = event.active.data.current as any as Piece;
-    const moves = getLegalMoves(piece.type, piece, objects, room.columns, room.rows);
-    const set = new Set<string>();
-    for (const move of moves) {
-      set.add(toKey(move.row, move.column));
-    }
-    setLegalMoves(set);
-  }
-  function onDragEnd(event: DragEndEvent) {
-    setLegalMoves(new Set());
-  }
+  const { onDragStart, onDragEnd, isLegalMove } = useDragAndDropActions();
 
   return (
     <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
@@ -40,11 +26,7 @@ const Board: FunctionComponent<Props> = ({}) => {
         >
           {cells.map((row, rowIndex) =>
             row.map((cell, columnIndex) => (
-              <Cell
-                key={toKey(rowIndex, columnIndex)}
-                cell={cell}
-                highlight={legalMoves.has(toKey(rowIndex, columnIndex))}
-              />
+              <Cell key={toKey(rowIndex, columnIndex)} cell={cell} highlight={isLegalMove(rowIndex, columnIndex)} />
             ))
           )}
         </div>
